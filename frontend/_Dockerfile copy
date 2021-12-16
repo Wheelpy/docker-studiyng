@@ -1,0 +1,18 @@
+FROM ubuntu:22.04
+
+WORKDIR /app
+RUN apt update
+ENV TZ=America/Los_Angeles
+# ENV NODE - нужно для того, чтобы потом ставить по переменной $ENV
+# ENV NPM 
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt install nodejs npm -y
+RUN apt-get clean
+COPY packag*.json ./
+RUN npm i
+COPY . .
+EXPOSE 8081
+CMD node code.js
+
+# добаить наверху юзера + в конце использовать переменную
+# добавить установку ноды после установки нвм нужной версии
