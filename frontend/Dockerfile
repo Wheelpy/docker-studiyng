@@ -73,24 +73,24 @@ RUN curl --version
 RUN wget --version
 
 # Add user "nvm" as non-root user
-RUN useradd -ms /bin/bash nvm
+RUN useradd -ms /bin/bash $USER
 
 # Copy and set permission for nvm directory
-COPY . /home/nvm/.nvm/
-RUN chown nvm:nvm -R "home/nvm/.nvm"
+COPY . /home/$USER
+RUN chown $USER:$USER -R "home/$USER"
 
 # Set sudoer for "nvm"
-RUN echo 'nvm ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+RUN echo '$USER ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
 # Switch to user "nvm" from now
-USER nvm
+USER $USER
 
-# nvm
-RUN echo 'export NVM_DIR="$HOME/.nvm"'                                       >> "$HOME/.bashrc"
-RUN echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> "$HOME/.bashrc"
-RUN echo '[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion" # This loads nvm bash_completion' >> "$HOME/.bashrc"
+# # nvm
+RUN echo 'export LABELUP_DIR="$HOME/.nvm"' >> "$HOME/.bashrc"
+RUN echo '[ -s "$LABELUP_DIR/nvm.sh" ] && . "$LABELUP_DIR/nvm.sh"  # This loads nvm' >> "$HOME/.bashrc"
+RUN echo '[ -s "$LABELUP_DIR/bash_completion" ] && . "$LABELUP_DIR/bash_completion" # This loads nvm bash_completion' >> "$HOME/.bashrc"
 
-# nodejs and tools
+# # nodejs and tools
 RUN bash -c 'source $HOME/.nvm/nvm.sh   && \
     nvm install node                    && \
     npm install -g doctoc urchin eclint dockerfile_lint && \
