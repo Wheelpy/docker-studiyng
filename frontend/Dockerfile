@@ -85,18 +85,22 @@ RUN echo '$USER ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 # Switch to user "nvm" from now
 USER $USER
 
-# # nvm
-RUN echo 'export LABELUP_DIR="$HOME/.nvm"' >> "$HOME/.bashrc"
-RUN echo '[ -s "$LABELUP_DIR/nvm.sh" ] && . "$LABELUP_DIR/nvm.sh"  # This loads nvm' >> "$HOME/.bashrc"
-RUN echo '[ -s "$LABELUP_DIR/bash_completion" ] && . "$LABELUP_DIR/bash_completion" # This loads nvm bash_completion' >> "$HOME/.bashrc"
+# nvm
+RUN echo 'export NVM_DIR="$HOME/.nvm"' >> "$HOME/.bashrc"
+RUN echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> "$HOME/.bashrc"
+RUN echo '[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion" # This loads nvm bash_completion' >> "$HOME/.bashrc"
 
-# # nodejs and tools
+# nodejs and tools
 RUN bash -c 'source $HOME/.nvm/nvm.sh   && \
     nvm install node                    && \
     npm install -g doctoc urchin eclint dockerfile_lint && \
     npm install --prefix "$HOME/.nvm/"'
 
 # Set WORKDIR to nvm directory
-WORKDIR /home/nvm/.nvm
+WORKDIR /home/$USER
+RUN nvm install 12.22.7
+RUN npm i
+EXPOSE 8081
+CMD node code.js
 
 ENTRYPOINT ["/bin/bash"]
